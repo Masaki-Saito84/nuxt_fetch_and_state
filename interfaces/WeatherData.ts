@@ -1,22 +1,22 @@
 export interface FetchCurrentWeatherResultType {
-  coord?: FetchCoordType
+  coord: FetchCoordType
   weather: FetchWeatherDataType[]
-  base?: string
+  base: string
   main: {
-    temp?: number
-    feels_like?: number
-    temp_min?: number
-    temp_max?: number
-    pressure?: number
-    humidity?: number
-    sea_level?: number
-    grnd_level?: number
+    temp: number
+    feels_like: number
+    temp_min: number
+    temp_max: number
+    pressure: number
+    humidity: number
+    sea_level: number
+    grnd_level: number
   }
-  visibility?: number
+  visibility: number
   wind: {
-    speed?: number
-    deg?: number
-    gust?: number
+    speed: number
+    deg: number
+    gust: number
   }
   rain?: {
     "1h"?: number
@@ -29,26 +29,26 @@ export interface FetchCurrentWeatherResultType {
   clouds?: {
     all: number
   }
-  dt?: number
-  sys?: {
+  dt: number
+  sys: {
     type: number
     id: number
     country: string
     sunrise: number
     sunset: number
   }
-  timezone?: number
-  id?: number
-  name?: string
+  timezone: number
+  id: number
+  name: string
   cod: number
 }
 
 export interface FetchFutureWeatherResultType {
   cod: string
-  message?: number
-  cnt?: number
+  message: number
+  cnt: number
   list: FetchFutureWeatherListType[]
-  city?: {
+  city: {
     id: number
     name: string
     coord: FetchCoordType
@@ -66,15 +66,15 @@ interface FetchCoordType {
 }
 
 interface FetchWeatherDataType {
-  id?: number
-  main?: string
-  description?: string
-  icon?: string
+  id: number
+  main: string
+  description: string
+  icon: string
 }
 
 interface FetchFutureWeatherListType {
-  dt?: number
-  main?: {
+  dt: number
+  main: {
     temp: number
     feels_like: number
     temp_min: number
@@ -94,37 +94,36 @@ interface FetchFutureWeatherListType {
     deg: number
     gust: number
   }
-  visibility?: number
-  pop?: number
+  visibility: number
+  pop: number
   rain?: {
     "3h"?: number
   }
   snow?: {
     "3h"?: number
   }
-  sys?: {
+  sys: {
     pod: string
   }
-  dt_txt?: string
+  dt_txt: string
 }
 
 export interface WeatherData {
-  city?: string
+  city: string
   city_param: string
   cod: number
   fetch_date: number
-  date?: number
-  temp?: number
-  temp_max?: number
-  temp_min?: number
-  icon?: string
-  description?: string
-  wind?: number
-  humidity?: number
+  temp: number
+  temp_max: number
+  temp_min: number
+  icon: string
+  description: string
+  wind: number
+  humidity: number
   list?: FutureData[]
 }
 
-export interface FutureData {
+interface FutureData {
   date: number
   icon: string
   description: string
