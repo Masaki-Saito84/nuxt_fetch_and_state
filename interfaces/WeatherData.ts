@@ -129,3 +129,19 @@ export interface FutureData {
   icon: string
   description: string
 }
+export interface FetchWeatherParams {
+  params: {
+    q?: string
+    units?: string
+    cnt?: number
+    lang?: string
+    appid?: string
+  }
+}
+
+export interface FetchWeatherError {
+  cod: number
+  city_param: string
+  fetch_date: number
+  message: string
+}

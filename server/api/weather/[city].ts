@@ -1,15 +1,28 @@
-import { FetchCurrentWeatherResultType, FetchFutureWeatherResultType, WeatherData } from "~/interfaces/WeatherData"
+import {
+  FetchCurrentWeatherResultType,
+  FetchFutureWeatherResultType,
+  WeatherData,
+  FetchWeatherParams,
+  FetchWeatherError,
+} from "~/interfaces/WeatherData"
 import { FetchError } from "ofetch"
 
-const handleFetch = async (url: string, params: object) => {
+const handleFetch = async (url: string, params: FetchWeatherParams) => {
   try {
     const response = await $fetch(url, params)
-    return response
+    return { data: response }
   } catch (error) {
     console.error(`Error fetching data from ${url}`, error)
     const fetchError = error as FetchError
-    const cod = fetchError.data.cod
-    return cod
+    const { data: fetchErrorData } = fetchError
+    const { cod, message } = fetchErrorData
+    const errorData = {
+      cod,
+      city_param: params.params.q,
+      fetch_date: new Date().getTime(),
+      message,
+    } as FetchWeatherError
+    return { error: errorData }
   }
 }
 
@@ -19,26 +32,27 @@ export default defineEventHandler(async (event) => {
   const iconPath = "https://openweathermap.org/img/wn/"
 
   if (!event.context || !event.context.params || !event.context.params.city) {
-    console.log("InvalidArgument")
     const errorData = {
       cod: 400,
-    } as WeatherData
-    return { data: errorData }
+      fetch_date: new Date().getTime(),
+      message: "InvalidArgument",
+      city_param: "undefined",
+    } as FetchWeatherError
+    return { error: errorData }
   }
-
   const city = event.context.params.city
 
   try {
-    const currentWeatherData = await handleFetch(`${endPoint}weather`, {
+    const currentWeatherParams = {
       params: {
         q: city,
         appid: key,
         lang: "ja",
         units: "metric",
       },
-    })
+    } as FetchWeatherParams
 
-    const futureWeatherData = await handleFetch(`${endPoint}forecast`, {
+    const futureWeatherParams = {
       params: {
         q: city,
         appid: key,
@@ -46,21 +60,28 @@ export default defineEventHandler(async (event) => {
         units: "metric",
         cnt: 3,
       },
-    })
+    } as FetchWeatherParams
 
-    if (typeof currentWeatherData === "number" || typeof futureWeatherData === "number") {
-      console.log("typeerror")
-      console.log("error")
-      const errorData = {
-        cod: typeof currentWeatherData === "number" ? currentWeatherData : futureWeatherData,
-        city_param: city,
-      } as WeatherData
-
-      return { data: errorData }
+    const { data: currentResult, error: currentWeatherError } = (await handleFetch(`${endPoint}weather`, currentWeatherParams)) as {
+      data: FetchCurrentWeatherResultType
+      error?: FetchWeatherError
+    }
+    const { data: futureResult, error: futureWeatherError } = (await handleFetch(`${endPoint}forecast`, futureWeatherParams)) as {
+      data: FetchFutureWeatherResultType
+      error?: FetchWeatherError
     }
 
-    const currentResult = currentWeatherData as FetchCurrentWeatherResultType
-    const futureResult = futureWeatherData as FetchFutureWeatherResultType
+    if (currentWeatherError || futureWeatherError) {
+      const message = currentWeatherError ? currentWeatherError.message : futureWeatherError?.message
+      const errorData = {
+        cod: currentWeatherError ? currentWeatherError.cod : futureWeatherError?.cod,
+        city_param: city,
+        fetch_date: new Date().getTime(),
+        message,
+      } as FetchWeatherError
+
+      return { error: errorData }
+    }
 
     const weatherData = {
       city: currentResult.name,
@@ -84,11 +105,13 @@ export default defineEventHandler(async (event) => {
     return { data: weatherData }
   } catch (error) {
     console.error("データの取得中にエラーが発生しました", error)
-    console.log("error", error)
 
     const errorData = {
       cod: 400,
-    } as WeatherData
-    return { data: errorData }
+      fetch_date: new Date().getTime(),
+      message: "データの取得中にエラーが発生しました",
+      city_param: city,
+    } as FetchWeatherError
+    return { error: errorData }
   }
 })
