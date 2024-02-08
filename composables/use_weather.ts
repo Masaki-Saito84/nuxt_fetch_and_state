@@ -24,7 +24,6 @@ export const useWeather = () => {
   }
 
   return {
-    weatherList,
     getWeatherData,
   }
 }

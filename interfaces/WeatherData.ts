@@ -144,3 +144,7 @@ export interface FetchWeatherError {
   fetch_date: number
   message: string
 }
+
+export const isFetchWeatherError = (data: any): data is FetchWeatherError => {
+  return data.cod !== undefined && data.city_param !== undefined && data.fetch_date !== undefined && data.message !== undefined
+}

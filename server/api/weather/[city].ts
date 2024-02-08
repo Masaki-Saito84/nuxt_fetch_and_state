@@ -88,7 +88,6 @@ export default defineEventHandler(async (event) => {
       city_param: city,
       cod: currentResult.cod,
       fetch_date: new Date().getTime(),
-      date: currentResult.dt,
       temp: currentResult.main.temp,
       temp_max: currentResult.main.temp_max,
       temp_min: currentResult.main.temp_min,
