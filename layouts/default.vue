@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
-const { getWeatherData } = useWeather()
+
+const { getWeatherData, removeWeatherData } = useWeather()
 const route = useRoute()
-
 const data = computed(() => getWeatherData())
-
 const routeName = computed(() => route.name)
 
 const date = computed(() => {
@@ -16,7 +15,11 @@ const date = computed(() => {
   return `${hours}:${minutes}`
 })
 
-const city = computed(() => {
+const updateWeatherData = () => {
+  removeWeatherData(route.params.city.toString())
+}
+
+const cityLabel = computed(() => {
   if (routeName.value === "index") {
     return "東京"
   } else if (data.value !== undefined && !isFetchWeatherError(data.value)) {
@@ -25,7 +28,7 @@ const city = computed(() => {
   return route.params.city
 })
 
-const title = computed(() => (routeName.value !== "index" ? `${city.value}の詳しい天気` : `${city.value}の天気`))
+const title = computed(() => (routeName.value !== "index" ? `${cityLabel.value}の詳しい天気` : `${cityLabel.value}の天気`))
 </script>
 
 <template>
@@ -42,9 +45,11 @@ const title = computed(() => (routeName.value !== "index" ? `${city.value}の詳
         </p>
         <div v-if="isFetchWeatherError(data)">
           <p>{{ data.city_param }}の天気の取得に失敗しました</p>
+          <p @click="updateWeatherData">更新</p>
         </div>
         <div class="city-header__wrapper" v-else>
           <img :src="data.icon" :alt="data.description" />
+          <p @click="updateWeatherData">更新</p>
           <p v-if="routeName === 'index'">{{ data.description }}</p>
           <ul v-if="routeName === 'city'" class="current-weather__list">
             <li class="current-weather__item">天候 {{ data.description }}</li>
