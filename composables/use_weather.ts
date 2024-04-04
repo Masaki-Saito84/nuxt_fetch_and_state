@@ -1,7 +1,7 @@
 import type { WeatherData, FetchWeatherError } from "~/interfaces/WeatherData"
 
 export const useWeather = () => {
-  const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData>>("weatherList", () => [])
+  const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData | FetchWeatherError>>("weatherList", () => [])
 
   const removeWeatherData = (city: string) => {
     const baseList = weatherList.value.filter((data) => data.city_param !== city)

@@ -130,7 +130,7 @@ interface FutureData {
 }
 export interface FetchWeatherParams {
   params: {
-    q?: string
+    q: string
     units?: string
     cnt?: number
     lang?: string
