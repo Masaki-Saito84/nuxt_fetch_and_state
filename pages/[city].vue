@@ -5,7 +5,14 @@ const { getWeatherData } = useWeather()
 const data = computed(() => getWeatherData())
 </script>
 <template>
-  <main v-if="data && !isFetchWeatherError(data)">
+  <WeatherIcon />
+  <div v-if="data && !isFetchWeatherError(data)">
+    <ul class="current-weather__list">
+      <li class="current-weather__item">天候 {{ data.description }}</li>
+      <li class="current-weather__item">気温 {{ data.temp }}℃</li>
+      <li class="current-weather__item">湿度 {{ data.humidity }}%</li>
+      <li class="current-weather__item">風速 {{ data.wind }}m</li>
+    </ul>
     <section class="detail__section">
       <h2>本日の気温</h2>
       <ul class="temp">
@@ -22,5 +29,5 @@ const data = computed(() => getWeatherData())
         </li>
       </ul>
     </section>
-  </main>
+  </div>
 </template>
