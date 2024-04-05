@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
 
-const { getWeatherData, removeWeatherData } = useWeather()
+const { currentWeatherData, removeWeatherData } = useWeather()
 const route = useRoute()
-const data = computed(() => getWeatherData())
+const data = computed(() => currentWeatherData.value)
 
 const updateWeatherData = () => {
   removeWeatherData(route.params.city.toString())

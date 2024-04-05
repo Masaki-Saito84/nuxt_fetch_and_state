@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
 
-const { getWeatherData } = useWeather()
+const { currentWeatherData } = useWeather()
 const route = useRoute()
 
-const data = computed(() => getWeatherData())
+const data = computed(() => currentWeatherData.value)
 const routeName = computed(() => route.name)
 const date = computed(() => {
   if (!data.value) return
@@ -17,7 +17,7 @@ const date = computed(() => {
 const cityLabel = computed(() => {
   if (routeName.value === "index") {
     return "東京"
-  } else if (data.value !== undefined && !isFetchWeatherError(data.value)) {
+  } else if (data.value && !isFetchWeatherError(data.value)) {
     return data.value.city
   }
   return route.params.city

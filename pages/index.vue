@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
-
-const { getWeatherData } = useWeather()
-const data = computed(() => getWeatherData())
+const { setCurrentWeather, currentWeatherData } = useWeather()
+setCurrentWeather()
+const data = computed(() => currentWeatherData.value)
 const cityList = [
   { name: "tokyo", label: "東京" },
   { name: "osaka", label: "大阪" },
