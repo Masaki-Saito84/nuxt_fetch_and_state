@@ -36,7 +36,18 @@ export const useWeather = () => {
       await updateWeatherList(city)
     }
     currentWeatherData.value = selectedWeatherData.value || null
+  }
 
+  /**
+   * 現在表示している天気データを更新します。
+   */
+  const updateCurrentWeather = async () => {
+    if (currentWeatherData.value) {
+      const { city_param: city } = currentWeatherData.value
+      clearCurrentWeather()
+      await updateWeatherList(city)
+      currentWeatherData.value = findWeatherData(city) || null
+    }
   }
 
   return {
@@ -45,5 +56,6 @@ export const useWeather = () => {
     setCurrentWeather,
     // getCurrentWeather,
     // resetCurrentWeather
+    updateCurrentWeather,
   }
 }
