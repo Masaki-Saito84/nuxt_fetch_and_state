@@ -5,6 +5,11 @@ const { getCurrentWeather } = useWeather()
 const route = useRoute()
 const data = computed(() => getCurrentWeather())
 const routeName = computed(() => route.name)
+
+/**
+ * 取得日時に基づいてフォーマットされた時刻を計算して返します。
+ * @returns {string} 取得日時に基づいてフォーマットされた時刻
+ */
 const date = computed(() => {
   if (!data.value) return
   const { fetch_date: fetchDate } = data.value
@@ -13,15 +18,20 @@ const date = computed(() => {
   const minutes = dateObj.getMinutes().toString().padStart(2, "0")
   return `${hours}:${minutes}`
 })
-const cityLabel = computed(() => {
+
+/**
+ * ヘッダーのタイトルを計算して返します。
+ * @returns {string} ヘッダーのタイトル
+ */
+const title = computed(() => {
+  const weatherTitleSuffix = "天気"
   if (routeName.value === "index") {
-    return "東京"
+    return `東京の${weatherTitleSuffix}`
   } else if (data.value && !isFetchWeatherError(data.value)) {
-    return data.value.city
+    return `${data.value.city}の詳しい${weatherTitleSuffix}`
   }
-  return route.params.city
+  return `${route.params.city}の詳しい${weatherTitleSuffix}`
 })
-const title = computed(() => (routeName.value !== "index" ? `${cityLabel.value}の詳しい天気` : `${cityLabel.value}の天気`))
 </script>
 
 <template>
