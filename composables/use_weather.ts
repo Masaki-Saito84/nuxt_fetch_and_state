@@ -1,5 +1,9 @@
 import type { WeatherData, FetchWeatherError } from "~/interfaces/WeatherData"
 
+/**
+ * 天気データを取得し、管理するためのカスタムフックです。
+ * @returns 天気データを取得し、管理するための関数群
+ */
 export const useWeather = () => {
   const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData | FetchWeatherError>>("weatherList", () => [])
   const currentWeatherData: Ref<WeatherData | FetchWeatherError | null> = useState<WeatherData | FetchWeatherError | null>(
@@ -7,10 +11,14 @@ export const useWeather = () => {
     () => null
   )
 
+  /**
+   * 指定された都市の天気データをAPIから取得し、天気リストを更新します。
+   * @param city - 都市の名前
+   */
   const updateWeatherList = async (city: string) => {
-    const baseList = weatherList.value.filter((data) => data.city_param !== city)
+    const filteredList = weatherList.value.filter((data) => data.city_param !== city)
     const { data, error } = (await $fetch(`/api/weather/${city}`)) as { data: WeatherData; error: FetchWeatherError }
-    weatherList.value = data ? [...baseList, data] : [...baseList, error]
+    weatherList.value = data ? [...filteredList, data] : [...filteredList, error]
   }
 
   /**
