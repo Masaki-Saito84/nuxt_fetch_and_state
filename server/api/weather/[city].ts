@@ -7,6 +7,12 @@ import {
   FetchWeatherError,
 } from "~/interfaces/WeatherData"
 
+/**
+ * 天気データを取得するための関数です。
+ * @param url
+ * @param params
+ * @returns 天気データまたはエラー
+ */
 const handleFetch = async (url: string, params: FetchWeatherParams) => {
   try {
     const response = await $fetch(url, params)
@@ -26,6 +32,9 @@ const handleFetch = async (url: string, params: FetchWeatherParams) => {
   }
 }
 
+/**
+ * 天気データを取得するイベントハンドラーです。
+ */
 export default defineEventHandler(async (event) => {
   const key = "96b09366a5dcde18dae9ff6d17349504"
   const endPoint = "https://api.openweathermap.org/data/2.5/"
