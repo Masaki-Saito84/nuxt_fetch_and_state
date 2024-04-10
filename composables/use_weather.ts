@@ -4,14 +4,6 @@ export const useWeather = () => {
   const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData | FetchWeatherError>>("weatherList", () => [])
   const currentWeatherData: Ref<WeatherData | FetchWeatherError | null> = useState<WeatherData | FetchWeatherError | null>("currentWeather", () => null)
 
-  const temp = computed(() => {
-    return weatherList.value
-  })
-
-  const removeWeatherData = (city: string) => {
-    const baseList = weatherList.value.filter((data) => data.city_param !== city)
-    weatherList.value = baseList
-  }
 
   const updateWeatherList = async (city: string) => {
     const baseList = weatherList.value.filter((data) => data.city_param !== city)
@@ -34,7 +26,6 @@ export const useWeather = () => {
   }
 
   return {
-    removeWeatherData,
     // getWeatherData,
     currentWeatherData,
     setCurrentWeather,
