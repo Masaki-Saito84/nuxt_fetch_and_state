@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
-const { setCurrentWeather, currentWeatherData } = useWeather()
-
-setCurrentWeather()
-
-const data = computed(() => currentWeatherData.value)
+const { getCurrentWeather } = useWeather()
+const data = computed(() => getCurrentWeather())
 </script>
 <template>
   <WeatherIcon />

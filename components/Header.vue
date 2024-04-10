@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
+const { getCurrentWeather } = useWeather()
 
-const { currentWeatherData } = useWeather()
 const route = useRoute()
-
-const data = computed(() => currentWeatherData.value)
+const data = computed(() => getCurrentWeather())
 const routeName = computed(() => route.name)
 const date = computed(() => {
   if (!data.value) return
