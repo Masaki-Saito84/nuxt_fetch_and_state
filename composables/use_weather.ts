@@ -2,8 +2,10 @@ import type { WeatherData, FetchWeatherError } from "~/interfaces/WeatherData"
 
 export const useWeather = () => {
   const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData | FetchWeatherError>>("weatherList", () => [])
-  const currentWeatherData: Ref<WeatherData | FetchWeatherError | null> = useState<WeatherData | FetchWeatherError | null>("currentWeather", () => null)
-
+  const currentWeatherData: Ref<WeatherData | FetchWeatherError | null> = useState<WeatherData | FetchWeatherError | null>(
+    "currentWeatherData",
+    () => null
+  )
 
   const updateWeatherList = async (city: string) => {
     const baseList = weatherList.value.filter((data) => data.city_param !== city)
@@ -22,6 +24,12 @@ export const useWeather = () => {
    * 現在表示している天気データをクリアします。
    */
   const clearCurrentWeather = () => currentWeatherData.value = null
+
+  /**
+   * 現在表示している天気データを取得します。
+   * @returns 現在表示している天気データ
+   */
+  const getCurrentWeather = () => currentWeatherData.value
 
   /**
    * 指定された都市の天気データを取得し、現在表示している天気データを設定します。
@@ -51,11 +59,8 @@ export const useWeather = () => {
   }
 
   return {
-    // getWeatherData,
-    currentWeatherData,
+    getCurrentWeather,
     setCurrentWeather,
-    // getCurrentWeather,
-    // resetCurrentWeather
     updateCurrentWeather,
   }
 }
