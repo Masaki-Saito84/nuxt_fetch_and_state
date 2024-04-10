@@ -11,18 +11,32 @@ export const useWeather = () => {
     weatherList.value = data ? [...baseList, data] : [...baseList, error]
   }
 
-  const setCurrentWeather = () => {
-    console.log("setCurrentWeather");
+  /**
+   * 指定された都市の天気データを取得します。
+   * @param city - 都市の名前
+   * @returns 天気データ
+   */
+  const findWeatherData = (city: string) => weatherList.value.find((data) => data.city_param === city)
 
-    const { name: routeName, params: routeParams } = useRoute()
-    const city = routeName === "index" ? "tokyo" : routeParams.city
-    const weatherData = weatherList.value.find((data) => data.city_param === city)
+  /**
+   * 現在表示している天気データをクリアします。
+   */
+  const clearCurrentWeather = () => currentWeatherData.value = null
 
-    if (weatherData && new Date(weatherData.fetch_date).getTime() > new Date().getTime() - 600000) {
-      currentWeatherData.value = weatherData
+  /**
+   * 指定された都市の天気データを取得し、現在表示している天気データを設定します。
+   * @param city - 都市の名前
+   */
+  const setCurrentWeather = async (city: string) => {
+    clearCurrentWeather()
+    const selectedWeatherData = computed(() => findWeatherData(city))
+
+    // 天気データが存在しないか、取得してから10分以上経過している場合は更新
+    if (!selectedWeatherData.value || new Date(selectedWeatherData.value.fetch_date).getTime() <= new Date().getTime() - 600000) {
+      await updateWeatherList(city)
     }
+    currentWeatherData.value = selectedWeatherData.value || null
 
-    updateWeatherList(city.toString())
   }
 
   return {
