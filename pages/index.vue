@@ -8,6 +8,13 @@ const cityList = [
   { name: "osaka", label: "大阪" },
   { name: "nagoya", label: "名古屋" },
 ]
+const submit = (e: Event) => {
+  const input = (e.target as HTMLFormElement).querySelector("input")
+  if (!input) return
+  const cityName = input.value
+  if (!cityName) return
+  navigateTo(cityName)
+}
 </script>
 <template>
   <WeatherIcon />
@@ -24,7 +31,7 @@ const cityList = [
   </section>
   <section class="home__section">
     <h2>都市の天気を検索</h2>
-    <form action="" class="city-search">
+    <form v-on:submit.prevent="submit" class="city-search">
       <input type="text" class="city-search__input" placeholder="都市名を入力" />
       <button type="submit" class="city-search__btn">検索</button>
     </form>
