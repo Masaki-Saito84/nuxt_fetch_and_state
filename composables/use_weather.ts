@@ -31,7 +31,7 @@ export const useWeather = () => {
   /**
    * 現在表示している天気データをクリアします。
    */
-  const clearCurrentWeather = () => currentWeatherData.value = null
+  const clearCurrentWeather = () => (currentWeatherData.value = null)
 
   /**
    * 現在表示している天気データを取得します。
