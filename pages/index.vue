@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { isFetchWeatherError } from "~/interfaces/WeatherData"
+const { $cityList } = useNuxtApp()
 const { getCurrentWeather } = useWeather()
 const data = computed(() => getCurrentWeather())
 
-const cityList = [
-  { name: "tokyo", label: "東京" },
-  { name: "osaka", label: "大阪" },
-  { name: "nagoya", label: "名古屋" },
-]
 const submit = (e: Event) => {
   const input = (e.target as HTMLFormElement).querySelector("input")
   if (!input) return
@@ -19,11 +15,11 @@ const submit = (e: Event) => {
 <template>
   <WeatherIcon />
   <p v-if="data && !isFetchWeatherError(data)">{{ data.description }}</p>
-  <section class="home__section" v-if="cityList">
+  <section class="home__section" v-if="$cityList">
     <h2>主な都市を詳しく見る</h2>
     <nav>
       <ul class="city-list">
-        <li class="city-list__item" v-for="(city, index) in cityList" :key="index">
+        <li class="city-list__item" v-for="(city, index) in $cityList" :key="index">
           <NuxtLink :to="`/${city.name}`">{{ city.label }}</NuxtLink>
         </li>
       </ul>
