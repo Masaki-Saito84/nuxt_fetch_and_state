@@ -5,6 +5,7 @@ import type { WeatherData, FetchWeatherError } from "~/interfaces/WeatherData"
  * @returns 天気データを取得し、管理するための関数群
  */
 export const useWeather = () => {
+  const { $cityList } = useNuxtApp()
   const weatherList: Ref<Array<WeatherData | FetchWeatherError>> = useState<Array<WeatherData | FetchWeatherError>>("weatherList", () => [])
   const currentWeatherData: Ref<WeatherData | FetchWeatherError | null> = useState<WeatherData | FetchWeatherError | null>(
     "currentWeatherData",
@@ -47,11 +48,15 @@ export const useWeather = () => {
     clearCurrentWeather()
     const selectedWeatherData = computed(() => findWeatherData(city))
 
-    // 天気データが存在しないか、取得してから10分以上経過している場合は更新
-    if (!selectedWeatherData.value || new Date(selectedWeatherData.value.fetch_date).getTime() <= new Date().getTime() - 600000) {
-      await updateWeatherList(city)
+    if ($cityList.some((cityData) => cityData.name === city)) {
+      if (!selectedWeatherData.value || new Date(selectedWeatherData.value.fetch_date).getTime() <= new Date().getTime() - 600000) {
+        await updateWeatherList(city)
+      }
+      currentWeatherData.value = selectedWeatherData.value || null
+    } else {
+      const { data, error } = (await $fetch(`/api/weather/${city}`)) as { data: WeatherData; error: FetchWeatherError }
+      currentWeatherData.value = data ? data : error
     }
-    currentWeatherData.value = selectedWeatherData.value || null
   }
 
   /**
